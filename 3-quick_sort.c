@@ -9,74 +9,72 @@ void swap(int *a, int *b)
 {
 	if (a != b)
 	{
-		int tmp = *a;
+		int temp = *a;
 
 		*a = *b;
-		*b = tmp;
+		*b = temp;
 	}
 }
 
 /**
- * lomuto_partition - Lomuto Partiting scheme
- * @array: The array to sort
+ * lomuto_partition - Partitions the array using Lomuto scheme
+ * @array: The array to partition
  * @low: Starting index
  * @high: Ending index
- * @size: Size of full array (for printing)
- * Return: final pivot index
+ * @size: Array size (for printing)
+ *
+ * Return: Index of the pivot after partitioning
  */
 int lomuto_partition(int *array, int low, int high, size_t size)
 {
 	int pivot = array[high];
-	int i = low;
-	int j;
+	int i = low, j;
 
 	for (j = low; j < high; j++)
 	{
 		if (array[j] < pivot)
 		{
 			swap(&array[i], &array[j]);
-			if (i != j)
-			    print_array(array, size);
+			if (array[i] != array[j])
+				print_array(array, size);
 			i++;
 		}
 	}
 
-	if (i != high)
-	{
-		swap(&array[i + 1], &array[high]);
+	swap(&array[i], &array[high]);
+	if (array[i] != array[high])
 		print_array(array, size);
-	}
+
 	return (i);
 }
 
 /**
- * quicksort - Recursive quick sort
+ * quick_sort_recursive - Recursively applies quicksort
  * @array: The array to sort
  * @low: Starting index
  * @high: Ending index
- * @size: Total size of the array(for printing)
+ * @size: Array size (for printing)
  */
-void quicksort(int *array, int low, int high, size_t size)
+void quick_sort_recursive(int *array, int low, int high, size_t size)
 {
 	if (low < high)
 	{
-		int p = lomuto_partition(array, low, high, size);
+		int pivot_index = lomuto_partition(array, low, high, size);
 
-		quicksort(array, low, p - 1, size);
-		quicksort(array, p + 1, high, size);
+		quick_sort_recursive(array, low, pivot_index - 1, size);
+		quick_sort_recursive(array, pivot_index + 1, high, size);
 	}
 }
 
 /**
- * quick_sort - Entry point for Quick Sort
+ * quick_sort - Sorts an array using Quick sort (Lomuto)
  * @array: The array to sort
- * @size: Number of elements in array
+ * @size: Number of elements in the array
  */
-
 void quick_sort(int *array, size_t size)
 {
 	if (!array || size < 2)
 		return;
 
-	quicksort(array, 0, size - 1, size);
+	quick_sort_recursive(array, 0, size - 1, size);
 }
